@@ -219,12 +219,6 @@ function updateApp() {
   layerLabels.forEach(label => {
     label.classList.toggle('active', label.querySelector('input').checked);
   });
-
-  /*
-    GEE INTEGRATION:
-    Connect the selected value (NO2, SO2, HCHO, or CO)
-    to the corresponding Earth Engine map layer here.
-  */
 }
 
 document.getElementById('applyLayer').addEventListener('click', updateApp);
