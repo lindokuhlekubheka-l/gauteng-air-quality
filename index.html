@@ -76,8 +76,9 @@ button.secondary { background: #e8edf0; color: #263b48; }
   padding: 12px; margin-top: 12px; border-radius: 8px;
   background: #eef5f8; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere;
 }
-.legend-item { display: flex; align-items: center; gap: 10px; font-size: 14px; margin: 12px 0; }
-.swatch { width: 17px; height: 17px; border-radius: 4px; flex-shrink: 0; }
+.member-list {
+  margin: 8px 0 0 0; padding-left: 20px; font-size: 13px; color: #334e68; line-height: 1.6;
+}
 .note { color: #657782; font-size: 12px; line-height: 1.6; }
 footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
 @media (max-width: 800px) {
@@ -97,30 +98,42 @@ footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
   <aside class="sidebar">
     <section class="card">
       <h2>Pollution hotspot layers</h2>
-      <p class="intro">Select a pollutant to explore its hotspot map. You don't need any GIS experience.</p>
+      <p class="intro">Select a pollutant to explore its hotspot map.</p>
 
       <label class="layer-option active">
         <input type="radio" name="pollutant" value="NO2" checked>
         <img class="layer-icon" src="icon1.jpeg" alt="NO₂ hotspot icon">
-        <span><span class="layer-name">1. NO₂ Hotspot</span><span class="layer-description">Nitrogen dioxide pollution</span></span>
+        <span>
+          <span class="layer-name">1. NO₂ Hotspot</span>
+          <span class="layer-description">Primary marker for vehicular and industrial combustion emissions.</span>
+        </span>
       </label>
 
       <label class="layer-option">
         <input type="radio" name="pollutant" value="SO2">
         <img class="layer-icon" src="icon2.jpeg" alt="SO₂ hotspot icon">
-        <span><span class="layer-name">2. SO₂ Hotspot</span><span class="layer-description">Sulphur dioxide pollution</span></span>
+        <span>
+          <span class="layer-name">2. SO₂ Hotspot</span>
+          <span class="layer-description">Associated mainly with power generation, coal burning, and industrial smelting.</span>
+        </span>
       </label>
 
       <label class="layer-option">
         <input type="radio" name="pollutant" value="HCHO">
         <img class="layer-icon" src="icon3.png" alt="HCHO hotspot icon">
-        <span><span class="layer-name">3. HCHO Hotspot</span><span class="layer-description">Formaldehyde concentration</span></span>
+        <span>
+          <span class="layer-name">3. HCHO Hotspot</span>
+          <span class="layer-description">Indicates VOC oxidation and photochemical air pollution activity.</span>
+        </span>
       </label>
 
       <label class="layer-option">
         <input type="radio" name="pollutant" value="CO">
         <img class="layer-icon" src="icon4.png" alt="CO burning hotspot icon">
-        <span><span class="layer-name">4. CO Hotspot - Burning</span><span class="layer-description">Carbon monoxide and possible burning signals</span></span>
+        <span>
+          <span class="layer-name">4. CO Hotspot - Burning</span>
+          <span class="layer-description">Traces incomplete combustion linked to biomass burning and fossil fuels.</span>
+        </span>
       </label>
 
       <button id="applyLayer" type="button">View selected hotspot</button>
@@ -129,19 +142,20 @@ footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
     </section>
 
     <section class="card">
-      <h2>Map legend</h2>
-      <div class="legend-item"><span class="swatch" style="background:#2c7bb6"></span>Lower concentration</div>
-      <div class="legend-item"><span class="swatch" style="background:#abd9e9"></span>Moderate concentration</div>
-      <div class="legend-item"><span class="swatch" style="background:#ffffbf"></span>Elevated concentration</div>
-      <div class="legend-item"><span class="swatch" style="background:#fdae61"></span>High concentration</div>
-      <div class="legend-item"><span class="swatch" style="background:#d7191c"></span>Highest concentration</div>
-      <p class="note">Illustrative colours only. Final thresholds should be based on the selected pollutant data and analysis.</p>
+      <h2>Project Team</h2>
+      <p class="intro" style="margin-bottom: 6px; font-weight: bold; color: #173b52;">Group 10</p>
+      <ul class="member-list">
+        <li>Kubheka L. B.</li>
+        <li>Matshete R.</li>
+        <li>Mukuru M.</li>
+        <li>Thobejane L.</li>
+        <li>Malahleha M. S.</li>
+      </ul>
     </section>
 
     <section class="card">
       <h2>About this project</h2>
-      <p class="intro">This application is designed to help users explore the distribution of multiple atmospheric pollutants across Gauteng between 2018 and 2025.</p>
-      <p class="note">Satellite-derived concentrations are not the same as direct measurements of ground-level air quality.</p>
+      <p class="intro">Designed to analyze atmospheric pollutants across Gauteng between 2018 and 2025 using satellite remote sensing data.</p>
     </section>
   </aside>
 
