@@ -3,512 +3,239 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Multi-Pollutant Hotspot Identification - Gauteng</title>
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f3f6f8;
-  color: #263238;
+  margin: 0; font-family: Arial, sans-serif;
+  background: #f3f6f8; color: #263238;
 }
-
 header {
-  background: #173b52;
-  color: white;
-  padding: 25px 18px;
-  text-align: center;
+  background: #173b52; color: white; padding: 25px 18px; text-align: center;
 }
-
 header h1 {
-  font-size: clamp(21px, 3vw, 30px);
-  line-height: 1.4;
-  margin: 0 auto 10px;
-  max-width: 1050px;
+  font-size: clamp(21px, 3vw, 30px); line-height: 1.4;
+  margin: 0 auto 10px; max-width: 1050px;
 }
-
-header p {
-  margin: 0;
-  color: #dce9f0;
-  line-height: 1.6;
-}
-
+header p { margin: 0; color: #dce9f0; line-height: 1.6; }
 .container {
-  display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
-  gap: 18px;
-  padding: 18px;
-  max-width: 1550px;
-  margin: auto;
+  display: grid; grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px; padding: 18px; max-width: 1550px; margin: auto;
 }
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
 .card, .map-panel {
-  background: white;
-  border-radius: 12px;
+  background: white; border-radius: 12px;
   box-shadow: 0 3px 12px #172b3a12;
 }
-
-.card {
-  padding: 18px;
-}
-
-h2 {
-  font-size: 18px;
-  margin-top: 0;
-}
-
-.intro {
-  font-size: 14px;
-  color: #60717d;
-  line-height: 1.6;
-}
-
+.card { padding: 18px; }
+h2 { font-size: 18px; margin-top: 0; }
+.intro { font-size: 14px; color: #60717d; line-height: 1.6; }
 .layer-option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid #dce4e9;
-  border-radius: 9px;
-  padding: 12px;
-  margin-top: 10px;
-  cursor: pointer;
+  display: flex; align-items: center; gap: 12px;
+  border: 1px solid #dce4e9; border-radius: 9px;
+  padding: 12px; margin-top: 10px; cursor: pointer;
   transition: background .2s, border-color .2s;
 }
-
-.layer-option:hover {
-  background: #f0f6fa;
-  border-color: #4381a1;
-}
-
-.layer-option.active {
-  background: #eaf3f8;
-  border: 2px solid #28678a;
-}
-
-.layer-option input {
-  accent-color: #28678a;
-  flex-shrink: 0;
-}
-
+.layer-option:hover { background: #f0f6fa; border-color: #4381a1; }
+.layer-option.active { background: #eaf3f8; border: 2px solid #28678a; }
+.layer-option input { accent-color: #28678a; flex-shrink: 0; }
 .layer-icon {
-  width: 39px;
-  height: 39px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
+  width: 42px; height: 42px; object-fit: contain;
+  border-radius: 8px; flex-shrink: 0; background: #f4f6f7;
 }
-
-.layer-name {
-  font-weight: bold;
-  font-size: 14px;
-}
-
+.layer-name { font-weight: bold; font-size: 14px; display: block; }
 .layer-description {
-  display: block;
-  color: #657782;
-  font-size: 12px;
-  margin-top: 5px;
-  line-height: 1.4;
+  display: block; color: #657782; font-size: 12px;
+  margin-top: 5px; line-height: 1.4;
 }
-
 button {
-  width: 100%;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  margin-top: 12px;
-  background: #28678a;
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
+  width: 100%; border: none; padding: 12px; border-radius: 8px;
+  margin-top: 12px; background: #28678a; color: white;
+  font-size: 15px; font-weight: bold; cursor: pointer;
 }
-
-button:hover {
-  background: #194b67;
-}
-
-button.secondary {
-  background: #e8edf0;
-  color: #263b48;
-}
-
-.map-panel {
-  overflow: hidden;
-  min-height: 570px;
-}
-
-.map-heading {
-  padding: 17px;
-  border-bottom: 1px solid #e6ebef;
-}
-
-.map-heading h2 {
-  margin-bottom: 5px;
-}
-
-.map-heading p {
-  margin: 0;
-  font-size: 13px;
-  color: #657782;
-  line-height: 1.5;
-}
-
+button:hover { background: #194b67; }
+button.secondary { background: #e8edf0; color: #263b48; }
+.map-panel { overflow: hidden; min-height: 570px; }
+.map-heading { padding: 17px; border-bottom: 1px solid #e6ebef; }
+.map-heading h2 { margin-bottom: 5px; }
+.map-heading p { margin: 0; font-size: 13px; color: #657782; line-height: 1.5; }
 #map {
-  width: 100%;
-  height: 540px;
-  background: #e8eff2;
+  width: 100%; height: 540px; background: #e8eff2;
 }
-
 .map-placeholder {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 25px;
-  color: #365466;
+  height: 100%; min-height: 430px; display: flex;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 25px; color: #365466;
 }
-
-.map-placeholder-content {
-  max-width: 390px;
-  line-height: 1.7;
-}
-
-.map-placeholder .big-icon {
-  font-size: 50px;
-}
-
+.map-placeholder-content { max-width: 390px; line-height: 1.7; }
+.big-icon { display: flex; justify-content: center; }
+.big-icon img { width: 90px; height: 90px; object-fit: contain; }
 .status {
-  padding: 12px;
-  margin-top: 12px;
-  border-radius: 8px;
-  background: #eef5f8;
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
+  padding: 12px; margin-top: 12px; border-radius: 8px;
+  background: #eef5f8; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere;
 }
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  margin: 12px 0;
-}
-
-.swatch {
-  width: 17px;
-  height: 17px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.note {
-  color: #657782;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  color: #657782;
-  font-size: 13px;
-}
-
+.legend-item { display: flex; align-items: center; gap: 10px; font-size: 14px; margin: 12px 0; }
+.swatch { width: 17px; height: 17px; border-radius: 4px; flex-shrink: 0; }
+.note { color: #657782; font-size: 12px; line-height: 1.6; }
+footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
 @media (max-width: 800px) {
-  .container {
-    grid-template-columns: 1fr;
-    padding: 12px;
-  }
-
-  #map {
-    height: 430px;
-  }
-
-  .map-panel {
-    min-height: 430px;
-  }
+  .container { grid-template-columns: 1fr; padding: 12px; }
+  #map { height: 430px; }
+  .map-panel { min-height: 430px; }
 }
 </style>
 </head>
-
 <body>
-
 <header>
-  <h1>
-    Multi-Pollutant Hotspot Identification and
-    Spatiotemporal Trend Analysis in Gauteng
-    (2018 - 2025)
-  </h1>
+  <h1>Multi-Pollutant Hotspot Identification and Spatiotemporal Trend Analysis in Gauteng (2018 - 2025)</h1>
   <p>Explore air pollution patterns across Gauteng, South Africa</p>
 </header>
 
 <main class="container">
-
   <aside class="sidebar">
-
     <section class="card">
       <h2>Pollution hotspot layers</h2>
-
-      <p class="intro">
-        Select a pollutant to explore its hotspot map.
-        Each option represents a different pollutant.
-      </p>
+      <p class="intro">Select a pollutant to explore its hotspot map. You don't need any GIS experience.</p>
 
       <label class="layer-option active">
-        <input type="radio" name="pollutant"
-               value="NO2" checked>
-        <span class="layer-icon"
-              style="background:#dcecff">🔵</span>
-        <span>
-          <span class="layer-name">1. NO₂ Hotspot</span>
-          <span class="layer-description">
-            Nitrogen dioxide pollution
-          </span>
-        </span>
+        <input type="radio" name="pollutant" value="NO2" checked>
+        <img class="layer-icon" src="icon1.jpeg" alt="NO₂ hotspot icon">
+        <span><span class="layer-name">1. NO₂ Hotspot</span><span class="layer-description">Nitrogen dioxide pollution</span></span>
       </label>
 
       <label class="layer-option">
-        <input type="radio" name="pollutant"
-               value="SO2">
-        <span class="icon2.jpeg"
-              style="background:#ffe8cc">🟠</span>
-        <span>
-          <span class="icon2.jpeg">2. SO₂ Hotspot</span>
-          <span class="layer-description">
-            Sulphur dioxide pollution
-          </span>
-        </span>
+        <input type="radio" name="pollutant" value="SO2">
+        <img class="layer-icon" src="icon2.jpeg" alt="SO₂ hotspot icon">
+        <span><span class="layer-name">2. SO₂ Hotspot</span><span class="layer-description">Sulphur dioxide pollution</span></span>
       </label>
 
       <label class="layer-option">
-        <input type="radio" name="pollutant"
-               value="HCHO">
-        <span class="layer-icon"
-              style="background:#e8ddff">🟣</span>
-        <span>
-          <span class="layer-name">3. HCHO Hotspot</span>
-          <span class="layer-description">
-            Formaldehyde concentration
-          </span>
-        </span>
+        <input type="radio" name="pollutant" value="HCHO">
+        <img class="layer-icon" src="icon3.png" alt="HCHO hotspot icon">
+        <span><span class="layer-name">3. HCHO Hotspot</span><span class="layer-description">Formaldehyde concentration</span></span>
       </label>
 
       <label class="layer-option">
-        <input type="radio" name="pollutant"
-               value="CO">
-        <span class="layer-icon"
-              style="background:#ffe0e0">🔥</span>
-        <span>
-          <span class="layer-name">
-            4. CO Hotspot - Burning
-          </span>
-          <span class="layer-description">
-            Carbon monoxide and possible burning signals
-          </span>
-        </span>
+        <input type="radio" name="pollutant" value="CO">
+        <img class="layer-icon" src="icon4.png" alt="CO burning hotspot icon">
+        <span><span class="layer-name">4. CO Hotspot - Burning</span><span class="layer-description">Carbon monoxide and possible burning signals</span></span>
       </label>
 
-      <button id="applyLayer">View selected hotspot</button>
-      <button id="resetLayer" class="secondary">
-        Reset selection
-      </button>
-
-      <div id="status" class="status" aria-live="polite">
-        Selected: NO₂ Hotspot. Connect your Earth Engine
-        data to display the real hotspot layer.
-      </div>
+      <button id="applyLayer" type="button">View selected hotspot</button>
+      <button id="resetLayer" class="secondary" type="button">Reset selection</button>
+      <div id="status" class="status" aria-live="polite">Selected: NO₂ Hotspot. The map below is a preview placeholder until your GEE data is connected.</div>
     </section>
 
     <section class="card">
       <h2>Map legend</h2>
-
-      <div class="legend-item">
-        <span class="swatch" style="background:#2c7bb6"></span>
-        Lower concentration
-      </div>
-
-      <div class="legend-item">
-        <span class="swatch" style="background:#abd9e9"></span>
-        Moderate concentration
-      </div>
-
-      <div class="legend-item">
-        <span class="swatch" style="background:#ffffbf"></span>
-        Elevated concentration
-      </div>
-
-      <div class="legend-item">
-        <span class="swatch" style="background:#fdae61"></span>
-        High concentration
-      </div>
-
-      <div class="legend-item">
-        <span class="swatch" style="background:#d7191c"></span>
-        Highest concentration
-      </div>
-
-      <p class="note">
-        Illustrative colours. The final thresholds must be
-        based on the selected pollutant data and analysis.
-      </p>
+      <div class="legend-item"><span class="swatch" style="background:#2c7bb6"></span>Lower concentration</div>
+      <div class="legend-item"><span class="swatch" style="background:#abd9e9"></span>Moderate concentration</div>
+      <div class="legend-item"><span class="swatch" style="background:#ffffbf"></span>Elevated concentration</div>
+      <div class="legend-item"><span class="swatch" style="background:#fdae61"></span>High concentration</div>
+      <div class="legend-item"><span class="swatch" style="background:#d7191c"></span>Highest concentration</div>
+      <p class="note">Illustrative colours only. Final thresholds should be based on the selected pollutant data and analysis.</p>
     </section>
 
     <section class="card">
       <h2>About this project</h2>
-      <p class="intro">
-        This application is designed to help users explore
-        the distribution of multiple atmospheric pollutants
-        across Gauteng between 2018 and 2025.
-      </p>
-      <p class="note">
-        Satellite-derived concentrations are not the same
-        as direct measurements of ground-level air quality.
-      </p>
+      <p class="intro">This application is designed to help users explore the distribution of multiple atmospheric pollutants across Gauteng between 2018 and 2025.</p>
+      <p class="note">Satellite-derived concentrations are not the same as direct measurements of ground-level air quality.</p>
     </section>
-
   </aside>
 
   <section class="map-panel">
     <div class="map-heading">
       <h2 id="mapTitle">NO₂ Hotspot</h2>
-      <p id="mapDescription">
-        Nitrogen dioxide — selected pollutant layer
-      </p>
+      <p id="mapDescription">Nitrogen dioxide pollution</p>
     </div>
-
     <div id="map">
       <div class="map-placeholder">
         <div class="map-placeholder-content">
-          <div class="big-icon" id="mapIcon">🔵</div>
+          <div class="big-icon" id="mapIcon"><img src="icon1.jpeg" alt="NO₂ hotspot icon"></div>
           <h2 id="placeholderTitle">NO₂ Hotspot Map</h2>
-          <p>
-            Your Google Earth Engine interactive map will
-            appear here after you connect the actual data.
-          </p>
-          <p class="note">
-            Choose one of the four pollutant layers on the left
-            to change the selected map.
-          </p>
+          <p>Your Google Earth Engine interactive map will appear here after the real hotspot data is connected.</p>
+          <p class="note">Choose one of the four pollutant layers on the left to change the selected pollutant.</p>
         </div>
       </div>
     </div>
   </section>
-
 </main>
 
-<footer>
-  Multi-Pollutant Hotspot Identification and
-  Spatiotemporal Trend Analysis in Gauteng · 2018–2025
-</footer>
+<footer>Multi-Pollutant Hotspot Identification and Spatiotemporal Trend Analysis in Gauteng · 2018–2025</footer>
 
 <script>
 const pollutants = {
   NO2: {
     title: "NO₂ Hotspot",
     description: "Nitrogen dioxide pollution",
-    icon: "🔵"
+    icon: "icon1.jpeg"
   },
   SO2: {
     title: "SO₂ Hotspot",
     description: "Sulphur dioxide pollution",
-    icon: "🟠"
+    icon: "icon2.jpeg"
   },
   HCHO: {
     title: "HCHO Hotspot",
     description: "Formaldehyde concentration",
-    icon: "🟣"
+    icon: "icon3.png"
   },
   CO: {
     title: "CO Hotspot - Burning",
     description: "Carbon monoxide and possible burning signals",
-    icon: "🔥"
+    icon: "icon4.png"
   }
 };
 
-const radioButtons =
-  document.querySelectorAll('input[name="pollutant"]');
-
-const layerLabels =
-  document.querySelectorAll('.layer-option');
-
-const status = document.getElementById('status');
+const radioButtons = document.querySelectorAll('input[name="pollutant"]');
+const layerLabels = document.querySelectorAll('.layer-option');
+const statusBox = document.getElementById('status');
 
 function getSelectedPollutant() {
-  return document.querySelector(
-    'input[name="pollutant"]:checked'
-  ).value;
+  return document.querySelector('input[name="pollutant"]:checked').value;
 }
 
 function updateApp() {
   const selected = getSelectedPollutant();
   const pollutant = pollutants[selected];
 
-  document.getElementById('mapTitle').textContent =
-    pollutant.title;
+  document.getElementById('mapTitle').textContent = pollutant.title;
+  document.getElementById('mapDescription').textContent = pollutant.description;
+  document.getElementById('placeholderTitle').textContent = pollutant.title + " Map";
 
-  document.getElementById('mapDescription').textContent =
-    pollutant.description;
+  const mapIcon = document.getElementById('mapIcon');
+  mapIcon.replaceChildren();
+  const image = document.createElement('img');
+  image.src = pollutant.icon;
+  image.alt = pollutant.title + " icon";
+  image.onerror = function () {
+    mapIcon.textContent = "Icon not found: " + pollutant.icon;
+  };
+  mapIcon.appendChild(image);
 
-  document.getElementById('mapIcon').textContent =
-    pollutant.icon;
-
-  document.getElementById('placeholderTitle').textContent =
-    pollutant.title + " Map";
-
-  status.textContent =
-    "Selected: " + pollutant.title +
-    ". The interface has changed, but the real hotspot data " +
-    "must be connected to Google Earth Engine.";
+  statusBox.textContent = "Selected: " + pollutant.title +
+    ". The interface and icon have changed. Connect your actual Google Earth Engine hotspot layer to display real map data.";
 
   layerLabels.forEach(label => {
-    const radio = label.querySelector('input');
-    label.classList.toggle('active', radio.checked);
+    label.classList.toggle('active', label.querySelector('input').checked);
   });
 
   /*
-   * GEE INTEGRATION:
-   * When connected to your Earth Engine map, use "selected"
-   * to show the matching pollutant layer and hide the others.
-   */
+    GEE INTEGRATION:
+    Connect the selected value (NO2, SO2, HCHO, or CO)
+    to the corresponding Earth Engine map layer here.
+  */
 }
 
-document.getElementById('applyLayer').addEventListener(
-  'click', updateApp
-);
+document.getElementById('applyLayer').addEventListener('click', updateApp);
+radioButtons.forEach(radio => radio.addEventListener('change', updateApp));
 
-radioButtons.forEach(radio => {
-  radio.addEventListener('change', updateApp);
+document.getElementById('resetLayer').addEventListener('click', function () {
+  document.querySelector('input[name="pollutant"][value="NO2"]').checked = true;
+  updateApp();
 });
-
-document.getElementById('resetLayer').addEventListener(
-  'click', function() {
-    document.querySelector(
-      'input[name="pollutant"][value="NO2"]'
-    ).checked = true;
-
-    updateApp();
-  }
-);
 
 updateApp();
 </script>
-
 </body>
 </html>
