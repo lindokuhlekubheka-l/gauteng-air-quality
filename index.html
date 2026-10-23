@@ -35,7 +35,7 @@ header p { margin: 0; color: #dce9f0; line-height: 1.6; }
   margin: auto;
 }
 .sidebar { display: flex; flex-direction: column; gap: 16px; }
-.card, .map-panel, .detail-panel {
+.card, .map-panel, .detail-panel, .code-panel {
   background: white; 
   border-radius: 12px;
   box-shadow: 0 3px 12px #172b3a12;
@@ -88,10 +88,11 @@ button {
   cursor: pointer;
 }
 button:hover { background: #194b67; }
-button.secondary { background: #e8edf0; color: #263b48; }
+button.secondary { background: #e8edf0; color: #263b48; background-color: #e8edf0; color: #263b48;}
+button.secondary:hover { background: #d0dbe2; }
 
 .map-panel { overflow: hidden; min-height: 570px; display: flex; flex-direction: column; }
-.map-heading { padding: 17px; border-bottom: 1px solid #e6ebef; }
+.map-heading { padding: 17px; border-bottom: 1px solid #e6ebef; display: flex; justify-content: space-between; align-items: center; }
 .map-heading h2 { margin-bottom: 5px; }
 .map-heading p { margin: 0; font-size: 13px; color: #657782; line-height: 1.5; }
 #map {
@@ -108,10 +109,11 @@ button.secondary { background: #e8edf0; color: #263b48; }
   width: 100%; height: 100%; object-fit: contain; background: #ffffff;
 }
 
-/* Detail View Styles */
+/* Page Switcher Views */
 .page-view { display: none; }
 .page-view.active-page { display: grid; }
 
+/* Detail View Styles */
 .detail-header {
   grid-column: 1 / -1;
   background: white;
@@ -181,6 +183,55 @@ button.secondary { background: #e8edf0; color: #263b48; }
   object-fit: contain;
 }
 
+/* Code Inspector View */
+.code-container {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 18px;
+}
+.code-box {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 20px;
+  border-radius: 12px;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-x: auto;
+  max-height: 650px;
+  overflow-y: auto;
+}
+.code-controls {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px #172b3a12;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.layer-thumb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.layer-thumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #f8fafc;
+}
+.layer-thumb.active-thumb {
+  border-color: #28678a;
+  background: #eaf3f8;
+}
+.layer-thumb img { width: 36px; height: 36px; object-fit: contain; border-radius: 4px; background: white; }
+
 .status {
   padding: 12px; margin-top: 12px; border-radius: 8px;
   background: #eef5f8; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere;
@@ -190,9 +241,9 @@ button.secondary { background: #e8edf0; color: #263b48; }
 }
 footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .container { grid-template-columns: 1fr; padding: 12px; }
-  .detail-content { grid-template-columns: 1fr; }
+  .detail-content, .code-container { grid-template-columns: 1fr; }
   #map { height: 430px; }
   .map-panel { min-height: 430px; }
 }
@@ -216,7 +267,7 @@ footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
         <input type="radio" name="pollutant" value="NO2" checked>
         <img class="layer-icon" src="icon1.jpeg" alt="NO₂ hotspot icon">
         <span>
-          <span class="layer-name">1. NO₂ Hotspot</span>
+          <span class="layer-name">1. Maps (NO₂ Hotspot)</span>
           <span class="layer-description">Primary marker for vehicular and industrial combustion emissions.</span>
         </span>
       </div>
@@ -248,7 +299,8 @@ footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
         </span>
       </div>
 
-      <div id="status" class="status" aria-live="polite">Click any layer above to view its dedicated report and health impact breakdown.</div>
+      <button type="button" onclick="openCodePage()">See the GEE Code & Layers</button>
+      <div id="status" class="status" aria-live="polite">Click any layer above or click "See the GEE Code & Layers" to inspect code and map exports.</div>
     </section>
 
     <section class="card">
@@ -271,8 +323,11 @@ footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
 
   <section class="map-panel">
     <div class="map-heading">
-      <h2 id="mapTitle">NO₂ Hotspot</h2>
-      <p id="mapDescription">Nitrogen dioxide pollution preview</p>
+      <div>
+        <h2 id="mapTitle">Maps (NO₂ Hotspot)</h2>
+        <p id="mapDescription">Nitrogen dioxide pollution preview</p>
+      </div>
+      <button class="back-btn" style="width: auto; padding: 8px 14px; margin: 0;" onclick="openCodePage()">View GEE Code</button>
     </div>
     <div id="map">
       <div class="map-placeholder">
@@ -320,13 +375,120 @@ footer { text-align: center; padding: 20px; color: #657782; font-size: 13px; }
   </div>
 </main>
 
+<!-- GEE CODE & LAYER INSPECTOR PAGE -->
+<main id="codePage" class="container page-view">
+  <div class="detail-header">
+    <div>
+      <span class="pollutant-badge">Google Earth Engine Script Inspector</span>
+      <h1 style="margin: 5px 0; font-size: 24px; color: #173b52;">Group 5 Project GEE Code & Layer Viewer</h1>
+      <p style="margin: 0; color: #657782; font-size: 14px;">Inspect source code and select individual layers without the map interface.</p>
+    </div>
+    <button class="back-btn" onclick="showMainPage()">Close & Return to Dashboard</button>
+  </div>
+
+  <div class="code-container">
+    <pre class="code-box"><code id="geeScriptText">// Group 5 Project - Topic 5: Multi-Pollutant Hotspot Identification and Spatiotemporal Trend Analysis in Gauteng (2018–2025)
+// Group Members: Kubheka L.B, Thobejane KI, Mukuru M, Matshete R, Malahleha MS
+
+// Load custom Gauteng boundary asset
+var gauteng = ee.FeatureCollection("projects/casenova-499112/assets/Gauteng");
+var StudyArea = gauteng.geometry();
+
+Map.centerObject(gauteng, 8);
+Map.addLayer(gauteng.style({fillColor: '00000000', color: 'black', width: 2}), {}, 'Gauteng Boundary');
+
+var pal = ['white', 'blue', 'purple', 'red', 'black'];
+
+// MULTI-POLLUTANT PROCESSING (CO, HCHO, SO2, NO2)
+var co = ee.ImageCollection('COPERNICUS/S5P/NRTI/L3_CO')
+         .filterBounds(StudyArea)
+         .filterDate('2018-06-28', '2025-12-31')
+         .select('CO_column_number_density')
+         .mean().clip(StudyArea);
+
+Map.addLayer(co, {min: 0, max: 0.04, palette: ['white', 'orange', 'red', 'black']}, 'CO Hotspot - Burning', true);
+
+var hcho = ee.ImageCollection('COPERNICUS/S5P/NRTI/L3_HCHO')
+         .filterBounds(StudyArea)
+         .filterDate('2018-12-01', '2025-12-31')
+         .select('tropospheric_HCHO_column_number_density')
+         .mean().clip(StudyArea);
+
+Map.addLayer(hcho, {min: 0, max: 0.0002, palette: pal}, 'HCHO Hotspot', true);
+
+var so2 = ee.ImageCollection('COPERNICUS/S5P/NRTI/L3_SO2')
+         .filterBounds(StudyArea)
+         .filterDate('2018-07-10', '2025-12-31')
+         .select('SO2_column_number_density')
+         .mean().clip(StudyArea);
+
+Map.addLayer(so2, {min: 0, max: 0.0003, palette: pal}, 'SO2 Hotspot', true);
+
+var no2 = ee.ImageCollection('COPERNICUS/S5P/NRTI/L3_NO2')
+         .filterBounds(StudyArea)
+         .filterDate('2024-01-01', '2024-12-31')
+         .select('NO2_column_number_density')
+         .mean().clip(StudyArea);
+
+Map.addLayer(no2, {min: 0, max: 0.0002, palette: pal}, 'NO2 Hotspot', true);
+
+// EXPORTS
+Export.image.toDrive({ image: no2, description: 'Gauteng_NO2_2018_2025', folder: 'GEE_Gauteng_AirQuality', region: StudyArea, scale: 1000, crs: 'EPSG:4326', maxPixels: 1e9 });</code></pre>
+
+    <div class="code-controls">
+      <h2>Layer Inspector</h2>
+      <p class="intro" style="font-size: 13px;">Choose a layer below to inspect its map preview:</p>
+      
+      <div class="layer-thumb-list">
+        <div class="layer-thumb active-thumb" id="thumb-NO2" onclick="switchCodeLayer('NO2')">
+          <img src="icon1.jpeg" alt="NO2">
+          <div>
+            <strong style="font-size: 13px; display: block;">NO₂ Hotspot</strong>
+            <span style="font-size: 11px; color: #64748b;">Traffic & Combustion</span>
+          </div>
+        </div>
+
+        <div class="layer-thumb" id="thumb-SO2" onclick="switchCodeLayer('SO2')">
+          <img src="icon2.jpeg" alt="SO2">
+          <div>
+            <strong style="font-size: 13px; display: block;">SO₂ Hotspot</strong>
+            <span style="font-size: 11px; color: #64748b;">Power & Coal</span>
+          </div>
+        </div>
+
+        <div class="layer-thumb" id="thumb-HCHO" onclick="switchCodeLayer('HCHO')">
+          <img src="icon3.png" alt="HCHO">
+          <div>
+            <strong style="font-size: 13px; display: block;">HCHO Hotspot</strong>
+            <span style="font-size: 11px; color: #64748b;">VOC Oxidation</span>
+          </div>
+        </div>
+
+        <div class="layer-thumb" id="thumb-CO" onclick="switchCodeLayer('CO')">
+          <img src="icon4.png" alt="CO">
+          <div>
+            <strong style="font-size: 13px; display: block;">CO Hotspot</strong>
+            <span style="font-size: 11px; color: #64748b;">Incomplete Burning</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="img-preview-box" style="height: 180px; margin-top: 5px;">
+        <img id="codeLayerImage" src="icon1.jpeg" alt="Layer Preview">
+      </div>
+
+      <button class="secondary" onclick="showMainPage()">Close Inspector</button>
+    </div>
+  </div>
+</main>
+
 <footer>Multi-Pollutant Hotspot Identification and Spatiotemporal Trend Analysis in Gauteng · 2018–2025</footer>
 
 <script>
 const pollutantDetails = {
   NO2: {
     title: "Nitrogen Dioxide (NO₂)",
-    badge: "NO₂ Hotspot Analysis",
+    badge: "Maps (NO₂ Hotspot Analysis)",
     subtitle: "Combustion & Vehicular Emissions",
     icon: "icon1.jpeg",
     description: "Nitrogen Dioxide (NO₂) is a reddish-brown, highly reactive gas generated primarily from high-temperature combustion in motor vehicles, power plants, and industrial manufacturing processes across urban centers like Johannesburg and Pretoria.",
@@ -365,7 +527,6 @@ const pollutantDetails = {
 function openPollutantPage(key) {
   const data = pollutantDetails[key];
   
-  // Update detail page content
   document.getElementById('detailTitle').textContent = data.title;
   document.getElementById('detailBadge').textContent = data.badge;
   document.getElementById('detailSubtitle').textContent = data.subtitle;
@@ -374,16 +535,34 @@ function openPollutantPage(key) {
   document.getElementById('healthRisks').textContent = data.healthRisks;
   document.getElementById('healthBenefits').textContent = data.healthBenefits;
 
-  // Switch view without scrolling
   document.getElementById('mainPage').classList.remove('active-page');
+  document.getElementById('codePage').classList.remove('active-page');
   document.getElementById('detailPage').classList.add('active-page');
+  window.scrollTo(0, 0);
+}
+
+function openCodePage() {
+  document.getElementById('mainPage').classList.remove('active-page');
+  document.getElementById('detailPage').classList.remove('active-page');
+  document.getElementById('codePage').classList.add('active-page');
   window.scrollTo(0, 0);
 }
 
 function showMainPage() {
   document.getElementById('detailPage').classList.remove('active-page');
+  document.getElementById('codePage').classList.remove('active-page');
   document.getElementById('mainPage').classList.add('active-page');
   window.scrollTo(0, 0);
+}
+
+function switchCodeLayer(key) {
+  const data = pollutantDetails[key];
+  document.getElementById('codeLayerImage').src = data.icon;
+  
+  document.querySelectorAll('.layer-thumb').forEach(thumb => {
+    thumb.classList.remove('active-thumb');
+  });
+  document.getElementById('thumb-' + key).classList.add('active-thumb');
 }
 </script>
 
